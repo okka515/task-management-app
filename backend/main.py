@@ -64,7 +64,7 @@ def create_task(task_request: TaskCreateRequest):
     return new_task
 
 # タスクの完了状態の更新
-@app.patch("/tasks/{task_id}/complete", response_model=Task)
+@app.patch("/tasks/{task_id}", response_model=Task)
 def complete_task(task_id: int):
     task = find_task(task_id)
     if task is None:

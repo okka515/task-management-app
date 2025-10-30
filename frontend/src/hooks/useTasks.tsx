@@ -46,7 +46,7 @@ export const useTasks = () => {
     // タスクの完了状態切り替え
     const toggleTaskCompleted = useCallback(async (task: Task): Promise<boolean> => {
         try {
-            const response = await fetch(`${API_URL}/${task.id}/complete`, {
+            const response = await fetch(`${API_URL}/${task.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
