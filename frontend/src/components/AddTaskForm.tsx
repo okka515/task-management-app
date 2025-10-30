@@ -1,6 +1,10 @@
 import React from 'react';
 
-const AddTaskForm: React.FC = () => {
+interface AddTaskFormProps {
+    onCreateTask: (title: string) => Promise<boolean> ;
+}
+
+const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
 
     const [taskTitle, setTaskTitle] = React.useState<string>("");
 
@@ -12,9 +16,13 @@ const AddTaskForm: React.FC = () => {
     }
 
     // タスク追加ボタンが押された時の処理
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setTaskTitle("");
+        const success = await onCreateTask(taskTitle);
+        if (success) {
+            setTaskTitle("");
+        }
+        
     }
 
     return (

@@ -3,7 +3,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { Task } from '../App';
 
-const useTasks = () => {
+export const useTasks = () => {
+    const API_URL = 'http://127.0.0.1:8000';
 
     const [tasks, setTasks] = React.useState<Task[]>([]);
 
@@ -13,7 +14,7 @@ const useTasks = () => {
         const fetchTasks = async () => {
             // ここでAPIからタスクを取得する処理を実装
             try {
-                const response = await fetch('API_URLをここに記述');
+                const response = await fetch(`${API_URL}/tasks`);
                 const data = await response.json();
                 setTasks(data);
             } catch (error) {
@@ -24,9 +25,9 @@ const useTasks = () => {
 
     // タスクの追加
     // 不要なレンダリング対策のためuseCallbackを使用
-    const createTask = useCallback(async (title: string) => {
+    const onCreateTask = useCallback(async (title: string): Promise<boolean> => {
         try {
-            const response = await fetch('API_URLをここに記述', {
+            const response = await fetch(`${API_URL}/tasks`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,13 +36,53 @@ const useTasks = () => {
             });
             const newTask: Task = await response.json();
             setTasks((prevTasks) => [...prevTasks, newTask]);
+            return true;
         } catch (error) {
             console.error('タスクの追加に失敗しました:', error);
+            return false;
         }
     }, []);
 
-
     // タスクの完了状態切り替え
+    const toggleTaskCompleted = useCallback(async (task: Task): Promise<boolean> => {
+        try {
+            const response = await fetch(`${API_URL}/${task.id}/complete`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ completed: !task.completed }),
+            });
+            const updatedTask: Task = await response.json();
+            setTasks((prevTasks) =>
+                prevTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+            );
+            return true;
+        } catch (error) {
+            console.error('タスクの更新に失敗しました:', error);
+            return false;
+        }
+    }, [])
+    
     // タスクの削除
+    const deleteTask = useCallback(async (taskId: number): Promise<boolean> => {
+        try {
+            await fetch(`${API_URL}/tasks/${taskId}`, {
+                method: 'DELETE',
+            });
+            setTasks((prevTasks) => prevTasks.filter((t) => t.id !== taskId));
+            return true;
+        } catch (error) {
+            console.error('タスクの削除に失敗しました:', error);
+            return false;
+        }   
+    }, []);
+
+    return {
+        tasks,
+        onCreateTask,
+        toggleTaskCompleted,
+        deleteTask,
+    };
 }
 
