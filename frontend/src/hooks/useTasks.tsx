@@ -9,6 +9,7 @@ export const useTasks = () => {
 
     // taskの状態管理
     const [tasks, setTasks] = React.useState<Task[]>([]);
+    const [error, setError] = React.useState<string | null>(null);
 
     // ---タスク一覧の取得--- //
     // 何かが変わったときに実行される
@@ -16,10 +17,11 @@ export const useTasks = () => {
         const fetchTasks = async () => {
             // ここでAPIからtasksを取得する処理を実装
             try {
+                setError(null);
                 const response = await fetch(`${API_URL}/tasks`);
                 const data = await response.json();
                 setTasks(data);
-            } catch (error) {
+            } catch (err: any) {
                 console.error('タスクの取得に失敗しました:', error);
             }
         }
@@ -31,6 +33,7 @@ export const useTasks = () => {
     // ---タスクの追加--- //
     const onCreateTask = useCallback(async (title: string): Promise<boolean> => {
         try {
+            setError(null);
             const response = await fetch(`${API_URL}/tasks`, {
                 method: 'POST',
                 headers: {
@@ -41,7 +44,7 @@ export const useTasks = () => {
             const newTask: Task = await response.json();
             setTasks((prevTasks) => [...prevTasks, newTask]);
             return true;
-        } catch (error) {
+        } catch (err: any) {
             console.error('タスクの追加に失敗しました:', error);
             return false;
         }
@@ -50,6 +53,7 @@ export const useTasks = () => {
     // ---タスクの完了状態切り替え--- //
     const onToggleTaskCompleted = useCallback(async (task: Task): Promise<boolean> => {
         try {
+            setError(null);
             const response = await fetch(`${API_URL}/tasks/${task.id}`, {
                 method: 'PATCH',
             });
@@ -58,7 +62,7 @@ export const useTasks = () => {
                 prevTasks.map((t) => (t.id === updatedTask.id ? updatedTask : t))
             );
             return true;
-        } catch (error) {
+        } catch (err: any) {
             console.error('タスクの更新に失敗しました:', error);
             return false;
         }
@@ -66,13 +70,18 @@ export const useTasks = () => {
     
     // ---タスクの削除--- //
     const deleteTask = useCallback(async (taskId: number): Promise<boolean> => {
+        // 削除確認ダイアログ
+        if (!window.confirm('本当にこのタスクを削除しますか？')) {
+            return false;
+        }
         try {
+            setError(null);
             await fetch(`${API_URL}/tasks/${taskId}`, {
                 method: 'DELETE',
             });
             setTasks((prevTasks) => prevTasks.filter((t) => t.id !== taskId));
             return true;
-        } catch (error) {
+        } catch (err: any) {
             console.error('タスクの削除に失敗しました:', error);
             return false;
         }   
@@ -83,6 +92,7 @@ export const useTasks = () => {
         onCreateTask,
         onToggleTaskCompleted,
         deleteTask,
+        error,
     };
 }
 
