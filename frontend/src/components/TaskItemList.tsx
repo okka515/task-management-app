@@ -11,7 +11,7 @@ interface TaskListProps {
 
 const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, onClickDeleteTask}) => {
     return (
-        <div>
+        <div className='task-list'>
             {tasks.map((task) => (
                 <TaskItem
                     key={task.id}

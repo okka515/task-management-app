@@ -10,7 +10,6 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
 
     // タスク入力フォームが変更された時の処理
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        
         e.preventDefault();
         setTaskTitle(e.target.value);
     }
@@ -18,7 +17,10 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
     // タスク追加ボタンが押された時の処理
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const success = await onCreateTask(taskTitle);
+        if (taskTitle.trim() === "") {
+            return;
+        }
+        const success: boolean = await onCreateTask(taskTitle);
         if (success) {
             setTaskTitle("");
         }
@@ -27,7 +29,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='task-form'>
                 <input
                 type="text"
                 value={taskTitle}

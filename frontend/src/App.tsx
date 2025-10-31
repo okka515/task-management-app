@@ -12,14 +12,15 @@ export interface Task {
 
 function App() {
 
-  const { tasks, onCreateTask, toggleTaskCompleted, deleteTask } = useTasks();
+  const { tasks, onCreateTask, onToggleTaskCompleted, deleteTask } = useTasks();
 
   return (
     <div>
+      <h1>Task Management App</h1>
       <AddTaskForm onCreateTask={onCreateTask} />
       <TaskItemList 
         tasks={tasks}
-        onToggleTaskCompleted={toggleTaskCompleted}
+        onToggleTaskCompleted={onToggleTaskCompleted}
         onClickDeleteTask={deleteTask}  
         />
     </div>

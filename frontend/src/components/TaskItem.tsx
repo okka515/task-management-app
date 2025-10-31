@@ -9,17 +9,23 @@ interface TaskItemProps {
     onClickDeleteTask: (id: number) => void;
 }
 
+
+
 const TaskItem: React.FC<TaskItemProps> = ({task, onToggleTaskCompleted, onClickDeleteTask}) => {
+    const statusText = task.completed ? "完了済み" : "未完了";
+    const statusClass = task.completed ? "status-completed" : "status-pending";
     return (
-        <div>
-            <li>
-                <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => onToggleTaskCompleted(task)}
-                />
-                <span>{task.title}</span>
-                <button onClick={() => onClickDeleteTask(task.id)}>削除</button>
+        <div className='task-item'>
+            <li className={task.completed ? 'completed' : ''}>       
+                <button
+                    className={statusClass}
+                    onClick={() => onToggleTaskCompleted(task)}
+                    aria-label={task.completed ? "タスクを未完了に戻す" : "タスクを完了にする"}
+                >
+                    {statusText}
+                </button>
+                <span className='task-title'>{task.title}</span>
+                <button onClick={() => onClickDeleteTask(task.id)} className='delete-button'>削除</button>
             </li>
         </div>
     )

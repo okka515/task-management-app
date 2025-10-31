@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -22,13 +22,13 @@ task_id_counter = 0
 app = FastAPI()
 
 # CORSミドルウェアの設定
-originns = [
+origins = [
     "http://localhost:3000",
     "http://127.0.0.1:8000" 
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=originns,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,7 +36,7 @@ app.add_middleware(
 
 
 # タスクを探す関数
-def find_task(task_id: int) -> Task:
+def find_task(task_id: int) -> Optional[Task]:
     for task in db:
         if task.id == task_id:
             return task
@@ -68,7 +68,7 @@ def create_task(task_request: TaskCreateRequest):
 def complete_task(task_id: int):
     task = find_task(task_id)
     if task is None:
-        return ("タスクが見つかりません")
+        raise HTTPException(status_code=404, detail="タスクが見つかりません")
     else:
         task.completed = not task.completed
     return task
