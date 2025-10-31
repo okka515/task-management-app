@@ -8,10 +8,9 @@ interface TaskListProps {
     onClickDeleteTask: (id: number) => void;
 }
 
-
-const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, onClickDeleteTask}) => {
+const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, onClickDeleteTask}: TaskListProps) => {
     return (
-        <div className='task-list'>
+        <li className='task-list'>
             {tasks.map((task) => (
                 <TaskItem
                     key={task.id}
@@ -20,7 +19,7 @@ const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, on
                     onClickDeleteTask={onClickDeleteTask}
                 />
             ))}
-        </div>
+        </li> 
     )
 }
 

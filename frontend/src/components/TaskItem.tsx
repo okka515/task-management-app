@@ -1,5 +1,6 @@
 import React from 'react';
 import { Task } from '../App'
+import { FaTrash } from 'react-icons/fa'; // アイコンライブラリからゴミ箱アイコンをインポート
 
 // TaskItemコンポーネントのpropsの型定義
 // onToggleTaskConpletedとonClickDeleteTaskはTaskItemListから渡される
@@ -9,25 +10,22 @@ interface TaskItemProps {
     onClickDeleteTask: (id: number) => void;
 }
 
+const TrashIcon: React.ElementType = FaTrash as unknown as React.ElementType; // ゴミ箱アイコンの型定義
 
-
-const TaskItem: React.FC<TaskItemProps> = ({task, onToggleTaskCompleted, onClickDeleteTask}) => {
-    const statusText = task.completed ? "完了済み" : "未完了";
-    const statusClass = task.completed ? "status-completed" : "status-pending";
+const TaskItem: React.FC<TaskItemProps> = ({task, onToggleTaskCompleted, onClickDeleteTask}: TaskItemProps) => {
     return (
-        <div className='task-item'>
             <li className={task.completed ? 'completed' : ''}>       
-                <button
-                    className={statusClass}
-                    onClick={() => onToggleTaskCompleted(task)}
+                <input 
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() => onToggleTaskCompleted(task)}
                     aria-label={task.completed ? "タスクを未完了に戻す" : "タスクを完了にする"}
-                >
-                    {statusText}
-                </button>
+                 />
                 <span className='task-title'>{task.title}</span>
-                <button onClick={() => onClickDeleteTask(task.id)} className='delete-button'>削除</button>
+                <button onClick={() => onClickDeleteTask(task.id)} className='delete-button'>
+                    <TrashIcon />
+                </button>
             </li>
-        </div>
     )
 }
 

@@ -11,11 +11,10 @@ export interface Task {
 }
 
 function App() {
-
   const { tasks, onCreateTask, onToggleTaskCompleted, deleteTask } = useTasks();
 
   return (
-    <div>
+    <div className='App'>
       <h1>Task Management App</h1>
       <AddTaskForm onCreateTask={onCreateTask} />
       <TaskItemList 

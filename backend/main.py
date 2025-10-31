@@ -24,7 +24,7 @@ app = FastAPI()
 # CORSミドルウェアの設定
 origins = [
     "http://localhost:3000",
-    "http://127.0.0.1:8000" 
+    "http://127.0.0.1:8000" ,
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -77,7 +77,7 @@ def complete_task(task_id: int):
 def delete_task(task_id: int):
     task = find_task(task_id)
     if task is None:
-        return ("タスクが見つかりません")
+        raise HTTPException(status_code=404, detail="タスクが見つかりません")
     else:
         db.remove(task)
     return

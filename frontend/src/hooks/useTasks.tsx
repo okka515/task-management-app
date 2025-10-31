@@ -1,18 +1,20 @@
-// useTasksのフック作成
-// Taskに関する機能の一元管理を行う
 import React, { useCallback, useEffect } from 'react';
 import { Task } from '../App';
 
+// カスタムフック　useTasksの定義
 export const useTasks = () => {
+
+    // APIのベースURL
     const API_URL = 'http://127.0.0.1:8000';
 
+    // taskの状態管理
     const [tasks, setTasks] = React.useState<Task[]>([]);
 
-    // タスク一覧の取得
+    // ---タスク一覧の取得--- //
     // 何かが変わったときに実行される
     useEffect(() => {
         const fetchTasks = async () => {
-            // ここでAPIからタスクを取得する処理を実装
+            // ここでAPIからtasksを取得する処理を実装
             try {
                 const response = await fetch(`${API_URL}/tasks`);
                 const data = await response.json();
@@ -21,10 +23,12 @@ export const useTasks = () => {
                 console.error('タスクの取得に失敗しました:', error);
             }
         }
+        fetchTasks();
     },[]);
 
-    // タスクの追加
-    // 不要なレンダリング対策のためuseCallbackを使用
+    // 以下不要なレンダリング対策のためuseCallbackを使用
+
+    // ---タスクの追加--- //
     const onCreateTask = useCallback(async (title: string): Promise<boolean> => {
         try {
             const response = await fetch(`${API_URL}/tasks`, {
@@ -43,15 +47,11 @@ export const useTasks = () => {
         }
     }, []);
 
-    // タスクの完了状態切り替え
+    // ---タスクの完了状態切り替え--- //
     const onToggleTaskCompleted = useCallback(async (task: Task): Promise<boolean> => {
         try {
             const response = await fetch(`${API_URL}/tasks/${task.id}`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ completed: !task.completed }),
             });
             const updatedTask: Task = await response.json();
             setTasks((prevTasks) =>
@@ -64,7 +64,7 @@ export const useTasks = () => {
         }
     }, [])
     
-    // タスクの削除
+    // ---タスクの削除--- //
     const deleteTask = useCallback(async (taskId: number): Promise<boolean> => {
         try {
             await fetch(`${API_URL}/tasks/${taskId}`, {

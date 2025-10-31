@@ -4,7 +4,7 @@ interface AddTaskFormProps {
     onCreateTask: (title: string) => Promise<boolean> ;
 }
 
-const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
+const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}: AddTaskFormProps) => {
 
     const [taskTitle, setTaskTitle] = React.useState<string>("");
 
@@ -17,9 +17,11 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({onCreateTask}) => {
     // タスク追加ボタンが押された時の処理
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // 空のタスクは追加しない（バリデーションの追加）
         if (taskTitle.trim() === "") {
             return;
         }
+        // onCreateTaskを呼び出してタスクを追加 (成功したらフォームをクリアする)
         const success: boolean = await onCreateTask(taskTitle);
         if (success) {
             setTaskTitle("");
