@@ -4,22 +4,10 @@
 
 ### 1. バックエンド (FastAPI)
 
-1.  `backend/README.md` の手順に従い、仮想環境の有効化と `pip install` を実行
-2.  以下のコマンドでサーバーを起動
+1.  プロジェクトのルートディレクトリ (`task-management-app/`) で、Python 3 を使い仮想環境 (`.venv`) を作成します。
     ```bash
-    # (backend ディレクトリで実行)
-    uvicorn main:app --reload
+    python3 -m venv .venv
     ```
-
-### 2. フロントエンド (React)
-
-1.  `frontend/README.md` の手順に従い、`npm install` を実行
-2.  以下のコマンドで開発サーバーを起動
-    ```bash
-    # (frontend ディレクトリで実行)
-    npm start
-    ```
-3.  ブラウザで `http://localhost:3000` が自動的に開く
 
 ## 主な機能
 
