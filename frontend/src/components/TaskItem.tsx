@@ -6,8 +6,8 @@ import { FaTrash } from 'react-icons/fa'; // アイコンライブラリから�
 // onToggleTaskConpletedとonClickDeleteTaskはTaskItemListから渡される
 interface TaskItemProps {
     task: Task;
-    onToggleTaskCompleted: (task: Task) => void;
-    onClickDeleteTask: (id: number) => void;
+    onToggleTaskCompleted: (task: Task) => Promise<boolean>;
+    onClickDeleteTask: (id: number) => Promise<boolean>;
 }
 
 const TrashIcon: React.ElementType = FaTrash as unknown as React.ElementType; // ゴミ箱アイコンの型定義
@@ -22,7 +22,7 @@ const TaskItem: React.FC<TaskItemProps> = ({task, onToggleTaskCompleted, onClick
                     aria-label={task.completed ? "タスクを未完了に戻す" : "タスクを完了にする"}
                  />
                 <span className='task-title'>{task.title}</span>
-                <button onClick={() => onClickDeleteTask(task.id)} className='delete-button'>
+                <button onClick={() => onClickDeleteTask(task.id)} className='delete-button' aria-label='タスクを削除'>
                     <TrashIcon />
                 </button>
             </li>

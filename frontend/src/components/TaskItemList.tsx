@@ -4,13 +4,13 @@ import { Task } from '../App';
 
 interface TaskListProps {
     tasks: Task[];
-    onToggleTaskCompleted: (task: Task) => void;
-    onClickDeleteTask: (id: number) => void;
+    onToggleTaskCompleted: (task: Task) => Promise<boolean>;
+    onClickDeleteTask: (id: number) => Promise<boolean>;
 }
 
 const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, onClickDeleteTask}: TaskListProps) => {
     return (
-        <li className='task-list'>
+        <ul className='task-list'>
             {tasks.map((task) => (
                 <TaskItem
                     key={task.id}
@@ -19,7 +19,7 @@ const TaskItemList: React.FC<TaskListProps> = ({tasks, onToggleTaskCompleted, on
                     onClickDeleteTask={onClickDeleteTask}
                 />
             ))}
-        </li> 
+        </ul> 
     )
 }
 
